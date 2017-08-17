@@ -150,6 +150,7 @@ http://yuki312.blogspot.jp/2012/02/loader.html
 * 各ActivityやFragmentごとに1つ割り当てられ、何度LoaderMana
 
 ##### LoaderManagerのメソッド
+<<<<<<< HEAD
 * getLoaderManager
   * 正確にはActivity,Fragmentのメソッド
     * 呼び出したActivity,Fragmentに紐づくLoaderを取得
@@ -171,11 +172,15 @@ http://yuki312.blogspot.jp/2012/02/loader.html
 * destroyLoader
   * 引数のIDに紐付いたLoaderを停止・破棄します。
   * 対象のLoaderがデータをユーザーへ通知していた場合は、onLoadFinished→onLoaderResetがコール
+=======
+* LoaderManager
+>>>>>>> 2438c837885d77f62fd75b5092730b604099a380
 
 
 ---
 #### ASyncTaskLoaderとは
 * AsyncTaskLoaderはWorkerとしてのAsyncTask(ロードタスク)を内部にもつLoader
+<<<<<<< HEAD
 * AsyncTaskで行なっていた処理を、メインスレッドで行うべき処理と、バックグラウンドで行うべき処理に分離して行うことができるクラス
 * イメージ図<> ![](http://public-blog-dev.s3.amazonaws.com/wp-content/uploads/2012/06/AsyncTaskLoader.png)
 
@@ -190,6 +195,11 @@ http://yuki312.blogspot.jp/2012/02/loader.html
 * onCanceled
   * Loaderタスクが完了前にキャンセルされた場合にコールされる
   * キャンセルされたタスクに関係するデータをここでクリア
+=======
+* メインスレッドで行うべき処理と、バックグラウンドで行うべき処理を分離したもの
+* イメージ図<> ![](http://public-blog-dev.s3.amazonaws.com/wp-content/uploads/2012/06/AsyncTaskLoader.png)
+
+>>>>>>> 2438c837885d77f62fd75b5092730b604099a380
 
 #### AsyncTaskの問題点
 * ネットワーク通信などのインフラに近い処理と、結果を受けてUIを更新するなどの表示処理が同じクラスに混在してしまい、アクティビティやFragmentに依存しやすい
@@ -198,6 +208,7 @@ http://yuki312.blogspot.jp/2012/02/loader.html
 * 処理結果をキャッシュとして持っているため、次回からは再処理することなく結果を取得できる
 * コンフィグを変化させても、Loaderを再設定すれば再処理することなく最終結果を取得できる
 * Loaderはデータソースを監視してるため、内容が変更された際に新しい結果を取得できる
+<<<<<<< HEAD
 * 非同期の処理がLoaderManagerで管理されるため、ActivityやFragmentと分けて処理を実行できる
 * UIスレッドを必ずしも必要としない
 
@@ -205,6 +216,35 @@ http://yuki312.blogspot.jp/2012/02/loader.html
 * 画面の状態をただしく理解した上で実装しないと、エラーハンドリングができない
 * 自由にカスタマイズできる分、非同期処理の知識が必要
 * 進捗を常に表示するようなUIスレッドとの密接な処理ができない
+=======
+
+#### メソッド
+* onLoadInBackground
+  * ローダタスクのワーカースレッド上から呼び出されます。
+  * ワーカースレッド上で実行されるonLoadInBackgroundから直接、結果データをクライアントへ返却すべきではありません。
+  * 結果の返却はメインスレッド上で呼び出されるdeliverResult()内で行います。
+  * メインスレッドに結果を返却したい場合はdeliverResultをオーバーライドすることでそれが可能になります。
+  * onLoadInBackgroundはロード処理の結果を返す必要があります。
+  * onLoadInBackgroundは、サブクラスレスポンスのためにloadInBackgroundをコールします
+* loadInBackground
+* cancelLoad
+  * 現在のロードタスクをキャンセルしようとします。
+  * ロードタスクはバックグラウンドで動作しているため、キャンセル操作は即時反映されません。
+  * 実行中のロードタスクの場合、この要求によってロードがキャンセルされます。もし、ロード中に他のロード要求があったとしてもロードが完了するまで保持されます。
+  * ローダタスクの処理が完了すると、タスクの状態はクリアされます。
+  * ロードをキャンセルできなかった場合はfalseを返します。
+  * ロードが既に完了していた、あるいは、まだstartLoadingがコールされていない場合でもfalseを返します。
+  * このメソッドは常に**メインスレッド**から実行する必要があります。
+
+* onCanceled
+  * ローダタスクがそのタスクを完了する前にキャンセルされた場合にコールされます。
+  * ここでキャンセルされたタスクに関係するデータを破棄することができます。
+* setUpdateThrottle
+  * Throttleはクエリ発行頻度を調整する為の弁の役割を持ちます。
+  * 引数delayMSは発行頻度を決めるミリ秒単位の調整値です。
+  * タスクの完了(onLoadInBackground)から次のローダタスクが開始されるまでの最小の待ち時間を指定できます。
+
+>>>>>>> 2438c837885d77f62fd75b5092730b604099a380
 
 #### よくある間違いと回避方法
 * 意味のないLoader IDを作成する
@@ -220,7 +260,11 @@ https://wiki.toridge.com/index.php?android-AsyncTaskLoader
 
 ---
 ### 確認問題
+<<<<<<< HEAD
 * AsyncTaskLoaderはどんなことを実現するためのクラスですか？
   * AsyncTaskで行なっていた処理をメインスレッドで行うべき処理と、バックグラウンドで行うべき処理に分離して行うことができるクラス
 * AsyncTaskLoaderを使って非同期処理を行う場合、何クラスを利用してLoaderの管理を行いますか？
   * LoaderManagerクラス
+=======
+*
+>>>>>>> 2438c837885d77f62fd75b5092730b604099a380
